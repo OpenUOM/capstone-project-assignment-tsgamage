@@ -21,15 +21,17 @@ export class StudentTableComponent implements OnInit {
     this.getStudentData();
   }
 
-  addNewStudent() {
-    this.router.navigate(['addStudent']); // Ensure the route matches the expected one
+  addNewStudent(){
+    this.router.navigate(['addStudent'])
   }
 
-  editStudent(id: string) {
+  editStudent(id){
     const navigationExtras: NavigationExtras = {
-      state: { id: id }, // Pass the student ID as state
+      state: {
+        id : id
+      }
     };
-    this.router.navigate(['editStudent'], navigationExtras); // Ensure the route matches the expected one
+    this.router.navigate(['editStudent'], navigationExtras )
   }
 
   getStudentData(){
@@ -40,27 +42,26 @@ export class StudentTableComponent implements OnInit {
     })
   }
 
-  deleteStudent(itemid: string) {
-    const student = { id: itemid }; // Ensure the payload matches the backend's expected format
-    this.service.deleteStudent(student).subscribe(
-      (response) => {
-        console.log('Student deleted successfully:', response);
-        this.getStudentData(); // Refresh the data after deletion
-      },
-      (error) => {
-        console.error('Error deleting student:', error);
-      }
-    );
+  deleteStudent(itemid){
+    const student = {
+      id: itemid
+    }
+    this.service.deleteStudent(student).subscribe((response)=>{
+      this.getStudentData()
+    })
   }
 
-  search(value: string) {
-    if (value.trim().length === 0) {
-      this.getStudentData(); // Reset to original data if search input is empty
+  search(value) {
+    let foundItems = [];
+    if (value.length <= 0) {
+      this.getStudentData();
     } else {
-      this.studentData = this.studentData.filter((student) => {
-        const studentObj = Array.isArray(student) ? student[0] : student; // Handle wrapped structure
-        return studentObj.name.toLowerCase().includes(value.toLowerCase());
+      let b = this.studentData.filter((student) => {
+        if (student[0].name.toLowerCase().indexOf(value) > -1) {
+          foundItems.push(student)
+        }
       });
+      this.studentData = foundItems;
     }
   }
 }
