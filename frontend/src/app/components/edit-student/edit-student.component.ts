@@ -14,15 +14,16 @@ export class EditStudentComponent implements OnInit {
 
   constructor(private service : AppServiceService, private router: Router) { }
 
-  navigation = this.router.getCurrentNavigation();
+  navigation: any;
 
   ngOnInit(): void {
+    this.navigation = this.router.getCurrentNavigation();
     this.getStudentData();
   }
 
   getStudentData(){
     let student = {
-      id : this.navigation.extras.state.id
+      id : this.navigation?.extras?.state?.id ?? null
     }
     this.service.getOneStudentData(student).subscribe((response)=>{
       this.studentData = response[0];
