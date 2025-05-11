@@ -14,11 +14,8 @@ const routes: Routes = [
   { path: 'addTeacher', component: AddNewTeacherComponent },
   { path: 'addStudent', component: AddNewStudentComponent },
   { path: 'editStudent', component: EditStudentComponent },
-  { path: 'editTeacher', component: EditTeacherComponent },
-  { path: 'dbinitialize', component: StudentTableComponent }, // <-- Added this 💚
-  { path: '**', redirectTo: '' } // <-- Cute safety net 💫
+  { path: 'editTeacher', component: EditTeacherComponent }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
