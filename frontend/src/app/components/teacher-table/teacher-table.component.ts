@@ -60,18 +60,22 @@ export class TeacherTableComponent implements OnInit {
     })
   }
 
-  search(value) {
-    let foundItems = [];
-    if (value.length <= 0) {
-      this.getTeacherData();
-    } else {
-      let b = this.teacherData.filter((teacher) => {
-        if (teacher[0].name.toLowerCase().indexOf(value) > -1) {
-          foundItems.push(teacher)
-        }
-      });
-      this.teacherData = foundItems;
+  search(value: string) {
+    const searchTerm = value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+      this.getTeacherData(); 
+      return;
     }
+  
+    this.service.getTeacherData().subscribe((response) => {
+      const allTeachers = Object.keys(response).map(key => [response[key]]);
+      this.teacherData = allTeachers.filter(teacher => 
+        teacher[0].name.toLowerCase().includes(searchTerm)
+      );
+    }, (error) => {
+      console.log('ERROR - ', error)
+    });
   }
 
   deleteTeacher(itemid) {
