@@ -17,9 +17,12 @@ test('Testing add students', async t => {
 
     await t.navigateTo("/student");
 
-    const table = Selector('#student-table')
-    const rowCount = await table.find('tr').count;
+    const table = Selector('#student-table');
+    const studentRow = table.find('tr').withText("Pasindu Basnayaka");
 
-    let tdText = await table.find('tr').nth(rowCount - 1).innerText;
+    // Wait for the student row to appear (adjust timeout if needed)
+    await t.expect(studentRow.exists).ok({ timeout: 5000 });
+
+    let tdText = await studentRow.innerText;
     await t.expect(tdText).contains("Pasindu Basnayaka");
 });
