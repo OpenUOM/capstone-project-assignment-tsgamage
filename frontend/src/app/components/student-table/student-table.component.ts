@@ -34,8 +34,17 @@ export class StudentTableComponent implements OnInit {
     this.router.navigate(['editStudent'], navigationExtras )
   }
 
+  initializeDB(){
+    this.service.initializeDB().subscribe((response) => {
+      console.log('DB is Initialized')
+    }, (error) => {
+      console.log('ERROR - ', error)
+    })
+  }
+
   getStudentData(){
-    this.service.getStudentData().subscribe((response)=>{
+    this.selected = 'Students';
+    this.service.getStudentData().subscribe((response) => {
       this.studentData = Object.keys(response).map((key) => [response[key]]);
     },(error)=>{
       console.log('ERROR - ', error)
@@ -51,21 +60,17 @@ export class StudentTableComponent implements OnInit {
     })
   }
 
-  search(value: string) {
-    const searchTerm = value.toLowerCase().trim();
-    
-    if (!searchTerm) {
-      this.getStudentData(); 
-      return;
+  search(value) {
+    let foundItems = [];
+    if (value.length <= 0) {
+      this.getStudentData();
+    } else {
+      let b = this.studentData.filter((student) => {
+        if (student[0].name.toLowerCase().indexOf(value) > -1) {
+          foundItems.push(student)
+        }
+      });
+      this.studentData = foundItems;
     }
-  
-    this.service.getStudentData().subscribe((response) => {
-      const allStudents = Object.keys(response).map(key => [response[key]]);
-      this.studentData = allStudents.filter(student => 
-        student[0].name.toLowerCase().includes(searchTerm)
-      );
-    }, (error) => {
-      console.log('ERROR - ', error)
-    });
   }
 }

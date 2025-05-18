@@ -51,39 +51,27 @@ export class TeacherTableComponent implements OnInit {
     })
   }
 
-  getStudentData() {
-    this.selected = 'Students';
-    this.service.getStudentData().subscribe((response) => {
-      this.teacherData = response;
-    }, (error) => {
-      console.log('ERROR - ', error)
-    })
-  }
-
-  search(value: string) {
-    const searchTerm = value.toLowerCase().trim();
-    
-    if (!searchTerm) {
-      this.getTeacherData(); 
-      return;
-    }
-  
-    this.service.getTeacherData().subscribe((response) => {
-      const allTeachers = Object.keys(response).map(key => [response[key]]);
-      this.teacherData = allTeachers.filter(teacher => 
-        teacher[0].name.toLowerCase().includes(searchTerm)
-      );
-    }, (error) => {
-      console.log('ERROR - ', error)
-    });
-  }
 
   deleteTeacher(itemid) {
-    const test = {
+    const teacher = {
       id: itemid
     }
-    this.service.deleteTeacher(test).subscribe((response) => {
+    this.service.deleteTeacher(teacher).subscribe((response) => {
       this.getTeacherData()
     })
+  }
+
+  search(value) {
+    let foundItems = [];
+    if (value.length <= 0) {
+      this.getTeacherData();
+    } else {
+      let b = this.teacherData.filter((teacher) => {
+        if (teacher[0].name.toLowerCase().indexOf(value) > -1) {
+          foundItems.push(teacher)
+        }
+      });
+      this.teacherData = foundItems;
+    }
   }
 }
